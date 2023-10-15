@@ -34,21 +34,22 @@ import numpy as np
 import scipy as sc
 import datetime
 import netCDF4
-from GRDGEN.utility import read_ecmwf
+from GRDGEN.utility import read_ecmwf_xarray
 
 # --------------- SPECIFY USER INPUTS --------------------- #
 
 # Atmospheric Surface Pressure Files from ECMWF - MUST HAVE NETCDF4 FOR PYTHON INSTALLED 
 #  Specify the directory containing the yearly netcdf files here:
-ecmwf_directory = ("../../input/Load_Models/ECMWF/Surface_Pressure/")
+# ecmwf_directory = ("../../input/Load_Models/ECMWF/Surface_Pressure/")
+ecmwf_directory = ("C:/Users/11350/Desktop/Ronze/数据/loading/ECMWF/")
 
 # Date Range for Temporal-Mean Computation (yyyy, mm, dd); End Day is Included (Files to be Read in)
-start_year_tm = 2016; start_month_tm = 10; start_day_tm = 1
-end_year_tm = 2017; end_month_tm = 10; end_day_tm = 1
+start_year_tm = 2011; start_month_tm = 1; start_day_tm = 1
+end_year_tm = 2019; end_month_tm = 8; end_day_tm = 31
  
 # Date Range for Output Files (yyyy, mm, dd); End Day is Included (Files to be Written out)
-start_year_out = 2016; start_month_out = 10; start_day_out = 1
-end_year_out = 2017; end_month_out = 10; end_day_out = 1
+start_year_out = 2011; start_month_out = 1; start_day_out = 1
+end_year_out = 2019; end_month_out = 8; end_day_out = 31
 
 # Remove spatial and temporal averages?
 rm_spatial_mean = False
@@ -152,8 +153,10 @@ for qq in range(0,numel):
     string_dates.append(mydt.strftime('%Y%m%d%H%M%S'))
 
 # Fill Amplitude Array
-to_mask = np.empty((480*241,len(date_list)))
-atml_amp = np.empty((480*241,len(date_list)))
+# to_mask = np.empty((480*241,len(date_list)))
+# atml_amp = np.empty((480*241,len(date_list)))
+to_mask = np.empty((64*52,len(date_list)))
+atml_amp = np.empty((64*52,len(date_list)))
 dates_to_delete = []
 # SHAPE OF ARRAY
 atml_shape = atml_amp.shape
@@ -165,10 +168,10 @@ for ii in range(0,len(date_list)):
     string_year = mydt.strftime('%Y') # Convert Date to String in YYYY Format
     string_month = mydt.strftime('%m') # Month
     # Complete Pathname to Current ECMWF File
-    loadfile = ecmwf_directory + "ECMWF-ERA-Interim-" + string_year + "-" + string_month + ".nc"
+    loadfile = ecmwf_directory + "ECMWF_" + string_year + "_" + string_month + ".nc"
     # Read the File 
     if (os.path.isfile(loadfile)):
-        llat,llon,amp,pha,llat1dseq,llon1dseq,amp2darr,pha2darr = read_ecmwf.main(loadfile,mydt)
+        llat,llon,amp,pha,llat1dseq,llon1dseq,amp2darr,pha2darr = read_ecmwf_xarray.main(loadfile,mydt)
         # Combine Amplitude and Phase 
         to_mask[:,ii] = np.zeros((atml_shape[0],)) # file exists : do not apply mask
         atml_amp[:,ii] = np.multiply(amp,np.cos(np.radians(pha)))
@@ -253,7 +256,7 @@ for bb in range(0,len(date_list)): # Loop Takes Longer, but Saves on Memory
 masked_amp = to_mask = None
 
 # Set Phase to Zero (Amplitudes Contain Phase)
-atml_pha = np.zeros((480*241,len(date_list)))
+atml_pha = np.zeros((64*52,len(date_list)))
 
 # Loop Through Dates and Write to File
 for kk in range(0,len(date_list_out)):

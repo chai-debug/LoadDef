@@ -290,6 +290,8 @@ def main(grn_file,norm_flag,load_files,loadfile_format,regular,lslat,lslon,lsmas
         # Compute Convolution for Current File
         eamp[ii],epha[ii],namp[ii],npha[ii],vamp[ii],vpha[ii] = perform_convolution.main(\
             mfile,loadfile_format,ur,ue,un,load_density,ilat,ilon,iarea,lsmk,lsmask_type,regular,mass_cons,stname)
+        # print(f"{eamp[ii]},{epha[ii]},{namp[ii]},{npha[ii]},{vamp[ii]},{vpha[ii]}")
+        # print(f"{ur},'\n',{ue},'\n',{un}")
 
     # Prepare Output Files
     if (lsmask_type == 2):

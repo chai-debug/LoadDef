@@ -89,6 +89,9 @@ def main(loadfile,lf_format,ur,ue,un,load_density,ilat,ilon,iarea,lsmk,mask,regu
  
             # Find Where Amplitude is NaN (if anywhere) and Set to Zero
             nanidx = np.isnan(amp); amp[nanidx] = 0.; pha[nanidx] = 0.
+
+            # print(sum(amp))
+            # print(sum(pha))
  
             # Convert Amp/Pha Arrays to Real/Imag
             real = np.multiply(amp,np.cos(np.multiply(pha,pi/180.)))
